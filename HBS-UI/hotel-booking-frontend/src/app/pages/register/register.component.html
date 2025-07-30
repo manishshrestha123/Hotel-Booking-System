@@ -1,0 +1,47 @@
+<div class="register-container">
+  <h2>Create Your Account</h2>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <!-- Name -->
+    <div class="form-group">
+      <label>Name</label>
+      <input formControlName="fullName" type="text" placeholder="Full Name" />
+      <div class="error" *ngIf="submitted && f['fullName']?.errors?.['required']">
+        Name is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+        <label>Username</label>
+        <input formControlName="username" type="text" placeholder="Username" />
+        <div class="error" *ngIf="submitted && f['username']?.errors">
+            <span *ngIf="f['username']?.errors?.['required']">Username is required.</span>
+        </div>
+    </div>
+    
+    <!-- Email -->
+    <div class="form-group">
+      <label>Email</label>
+      <input formControlName="email" type="email" placeholder="Email Address" />
+      <div class="error" *ngIf="submitted && f['email']?.errors">
+        <span *ngIf="f['email']?.errors?.['required']">Email is required.</span>
+        <span *ngIf="f['email']?.errors?.['email']">Invalid email format.</span>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label>Password</label>
+      <input formControlName="password" type="password" placeholder="Password" />
+      <div class="error" *ngIf="submitted && f['password']?.errors">
+        <span *ngIf="f['password']?.errors?.['required']">Password is required.</span>
+        <span *ngIf="f['password']?.errors?.['minlength']">Minimum 6 characters.</span>
+      </div>
+    </div>
+
+    <button type="submit">Register</button>
+
+    <div class="success" *ngIf="registrationSuccess">Registration successful!</div>
+    <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+  </form>
+</div>
