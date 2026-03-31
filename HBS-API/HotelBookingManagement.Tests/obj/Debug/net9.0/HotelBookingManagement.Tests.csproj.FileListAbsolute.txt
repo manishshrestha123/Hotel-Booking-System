@@ -206,3 +206,4 @@ C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagemen
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.Tests\obj\Debug\net9.0\HotelBookingManagement.Tests.pdb
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.Tests\obj\Debug\net9.0\HotelBookingManagement.Tests.genruntimeconfig.cache
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.Tests\obj\Debug\net9.0\ref\HotelBookingManagement.Tests.dll
+C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.Tests\obj\Debug\net9.0\HotelBookingManagement.Tests.sourcelink.json

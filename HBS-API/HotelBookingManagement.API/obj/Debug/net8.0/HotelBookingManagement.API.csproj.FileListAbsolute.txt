@@ -269,10 +269,10 @@ C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagemen
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\staticwebassets.development.json
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\HotelBoo.B18FFEA1.Up2Date
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\HotelBookingManagement.API.dll
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\refint\HotelBookingManagement.API.dll
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\HotelBookingManagement.API.pdb
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\HotelBookingManagement.API.genruntimeconfig.cache
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\ref\HotelBookingManagement.API.dll
+C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\HotelBookingManagement.API.sourcelink.json

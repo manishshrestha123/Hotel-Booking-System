@@ -36,3 +36,4 @@ C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagemen
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.Infrastructure\obj\Debug\net8.0\HotelBookingManagement.Infrastructure.pdb
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.Infrastructure\obj\Debug\net8.0\HotelBookingManagement.Infrastructure.genruntimeconfig.cache
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.Infrastructure\obj\Debug\net8.0\ref\HotelBookingManagement.Infrastructure.dll
+C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.Infrastructure\obj\Debug\net8.0\HotelBookingManagement.Infrastructure.sourcelink.json

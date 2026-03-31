@@ -28,3 +28,4 @@ C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagemen
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.Application\obj\Debug\net8.0\refint\HotelBookingManagement.Application.dll
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.Application\obj\Debug\net8.0\HotelBookingManagement.Application.pdb
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.Application\obj\Debug\net8.0\ref\HotelBookingManagement.Application.dll
+C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.Application\obj\Debug\net8.0\HotelBookingManagement.Application.sourcelink.json
