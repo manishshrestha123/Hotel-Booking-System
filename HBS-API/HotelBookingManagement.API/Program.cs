@@ -7,13 +7,26 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 
+// Auth
 builder.Services.AddScoped<AuthAppService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+// Room
+builder.Services.AddScoped<RoomAppService>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+
+// Booking
+builder.Services.AddScoped<BookingAppService>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+
+// Customer
+builder.Services.AddScoped<CustomerAppService>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {

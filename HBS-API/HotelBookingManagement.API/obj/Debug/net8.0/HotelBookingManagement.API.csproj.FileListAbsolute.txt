@@ -276,3 +276,4 @@ C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagemen
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\HotelBookingManagement.API.genruntimeconfig.cache
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\ref\HotelBookingManagement.API.dll
 C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\HotelBookingManagement.API.sourcelink.json
+C:\Manish Shrestha\Project\Hotel management System\HBS-API\HotelBookingManagement.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
