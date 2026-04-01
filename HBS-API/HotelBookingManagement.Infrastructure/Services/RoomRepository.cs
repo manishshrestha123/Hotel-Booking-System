@@ -80,5 +80,12 @@ namespace HotelBookingManagement.Infrastructure.Services
 
             return !conflictingBooking;
         }
+
+        public async Task<Room> AddAsync(Room room)
+        {
+            await _context.Rooms.AddAsync(room);
+            await _context.SaveChangesAsync();
+            return room;
+        }
     }
 }

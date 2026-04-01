@@ -52,5 +52,13 @@ namespace HotelBookingManagement.API.Controller
             var availability = await _roomService.CheckAvailabilityAsync(id, checkIn, checkOut);
             return Ok(availability);
         }
+
+        /// <summary>Create a new room (admin only)</summary>
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateRoomDto dto)
+        {
+            var room = await _roomService.CreateRoomAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = room.Id }, room);
+        }
     }
 }

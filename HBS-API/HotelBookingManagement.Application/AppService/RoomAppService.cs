@@ -76,5 +76,26 @@ namespace HotelBookingManagement.Application.AppService
                 PriceOverride = a.PriceOverride
             });
         }
+
+        public async Task<RoomDto> CreateRoomAsync(CreateRoomDto dto)
+        {
+            var room = new HotelBookingManagement.Domain.Entities.Room(
+                dto.HotelId,
+                dto.RoomTypeId,
+                dto.RoomNumber,
+                dto.PricePerNight,
+                dto.Status
+            );
+
+            await _roomRepository.AddAsync(room);
+
+            return new RoomDto
+            {
+                Id = room.Id,
+                RoomNumber = room.RoomNumber,
+                PricePerNight = room.PricePerNight,
+                Status = room.Status.ToString()
+            };
+        }
     }
 }
