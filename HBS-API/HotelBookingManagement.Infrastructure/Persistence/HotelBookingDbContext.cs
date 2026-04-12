@@ -1,4 +1,5 @@
 using HotelBookingManagement.Domain.Entities;
+using HotelBookingManagement.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,7 @@ namespace HotelBookingManagement.Infrastructure.Persistence
                 entity.HasIndex(u => u.Email).IsUnique();
                 entity.HasIndex(u => u.Username).IsUnique();
                 entity.Property(u => u.FullName).IsRequired().HasMaxLength(100);
+                entity.Property(u => u.Role).IsRequired();
                 entity.Property(u => u.PasswordHash).IsRequired();
             });
 
@@ -105,7 +107,10 @@ namespace HotelBookingManagement.Infrastructure.Persistence
                 entity.Property(c => c.FullName).IsRequired().HasMaxLength(200);
                 entity.Property(c => c.Email).IsRequired().HasMaxLength(200);
                 entity.Property(c => c.Phone).IsRequired().HasMaxLength(50);
+                entity.Property(c => c.Username).HasMaxLength(100);
+                entity.Property(c => c.PasswordHash);
                 entity.HasIndex(c => c.Email).IsUnique();
+                entity.HasIndex(c => c.Username).IsUnique();
             });
 
             modelBuilder.Entity<Booking>(entity =>

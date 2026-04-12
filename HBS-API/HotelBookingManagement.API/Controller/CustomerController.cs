@@ -1,8 +1,7 @@
 using HotelBookingManagement.Application.AppService;
 using HotelBookingManagement.Application.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace HotelBookingManagement.API.Controller
 {
@@ -17,15 +16,37 @@ namespace HotelBookingManagement.API.Controller
             _customerService = customerService;
         }
 
-        /// <summary>Register a new guest/customer</summary>
+        /// <summary>Create a guest customer profile for booking flow</summary>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCustomerDto dto)
         {
-            var customer = await _customerService.CreateCustomerAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = customer.Id }, customer);
+            try
+            {
+                var customer = await _customerService.CreateCustomerAsync(dto);
+                return CreatedAtAction(nameof(GetById), new { id = customer.Id }, customer);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
-        /// <summary>Get customer profile</summary>
+        /// <summary>Create a customer account with login credentials</summary>
+        [Authorize(Roles = "SuperAdmin,Admin,Staff")]
+        [HttpPost("account")]
+        public async Task<IActionResult> CreateAccount([FromBody] CreateCustomerAccountDto dto)
+        {
+            try
+            {
+                var customer = await _customerService.CreateCustomerAccountAsync(dto);
+                return CreatedAtAction(nameof(GetById), new { id = customer.Id }, customer);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -7,10 +8,10 @@ import { Component } from '@angular/core';
   standalone: false
 })
 export class AdminLayoutComponent {
-  
+  constructor(private authService: AuthService) {}
+
   logout() {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user_role');
-    window.location.href = '/login';
+    this.authService.logout();
+    window.location.href = '/admin/login';
   }
 }

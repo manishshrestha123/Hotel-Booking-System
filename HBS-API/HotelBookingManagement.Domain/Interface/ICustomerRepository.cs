@@ -8,6 +8,8 @@ namespace HotelBookingManagement.Domain.Interface
     {
         Task<Customer?> GetByIdAsync(Guid id);
         Task<Customer?> GetByEmailAsync(string email);
+        Task<Customer?> GetByUsernameAsync(string username);
+        Task<Customer?> GetByIdentifierAsync(string identifier);
         Task AddAsync(Customer customer);
         Task UpdateAsync(Customer customer);
     }

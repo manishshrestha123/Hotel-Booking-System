@@ -10,6 +10,8 @@ namespace HotelBookingManagement.Domain.Interface
     public interface IUserRepository
     {
         Task<User?> GetByEmailAsync(string email);
+        Task<User?> GetByUsernameAsync(string username);
+        Task<User?> GetByIdentifierAsync(string identifier);
         Task AddAsync(User user);
     }
 }

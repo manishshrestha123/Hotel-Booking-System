@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BookingService } from '../../services/booking.service';
 import { Booking } from '../../models/booking.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-bookings',
@@ -13,9 +14,7 @@ export class BookingsComponent implements OnInit {
   isLoading = true;
   error: string | null = null;
   successMessage: string | null = null;
-
-  // For demo – in real app get from auth token
-  customerId = 'demo-customer-id';
+  customerEmail: string | null = null;
 
   today = new Date().toISOString().split('T')[0];
   cancellingId: string | null = null;
@@ -23,24 +22,37 @@ export class BookingsComponent implements OnInit {
   modifyCheckIn = '';
   modifyCheckOut = '';
 
-  constructor(private bookingService: BookingService, private router: Router) {}
+  constructor(
+    private bookingService: BookingService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.customerEmail = this.authService.getSession()?.email ?? null;
     this.loadBookings();
   }
 
   loadBookings(): void {
     this.isLoading = true;
     this.error = null;
-    this.bookingService.getBookingsByCustomer(this.customerId).subscribe({
+
+    if (!this.customerEmail) {
+      this.bookings = [];
+      this.isLoading = false;
+      this.error = 'Please log in with a customer account to view your bookings.';
+      return;
+    }
+
+    this.bookingService.findBookings(this.customerEmail).subscribe({
       next: (data) => {
         this.bookings = data;
         this.isLoading = false;
       },
-      error: () => {
-        this.bookings = this.getMockBookings();
+      error: (err) => {
+        this.bookings = [];
         this.isLoading = false;
-        this.error = 'Could not reach server. Showing demo bookings.';
+        this.error = err.error?.message || 'Could not load your bookings from the server.';
       }
     });
   }
@@ -60,13 +72,9 @@ export class BookingsComponent implements OnInit {
         this.cancellingId = null;
         this.showSuccess('Booking cancelled successfully.');
       },
-      error: () => {
+      error: (err) => {
         this.cancellingId = null;
-        // demo fallback
-        this.bookings = this.bookings.map(b =>
-          b.id === id ? { ...b, status: 'Cancelled' } : b
-        );
-        this.showSuccess('Booking cancelled (demo mode).');
+        this.error = err.error?.message || 'Could not cancel the booking.';
       }
     });
   }
@@ -79,6 +87,7 @@ export class BookingsComponent implements OnInit {
 
   submitModify(): void {
     if (!this.modifyingBooking) return;
+
     this.bookingService.modifyBooking(this.modifyingBooking.id, {
       checkInDate: this.modifyCheckIn,
       checkOutDate: this.modifyCheckOut
@@ -88,9 +97,9 @@ export class BookingsComponent implements OnInit {
         this.modifyingBooking = null;
         this.showSuccess('Booking updated successfully!');
       },
-      error: () => {
+      error: (err) => {
         this.modifyingBooking = null;
-        this.showSuccess('Booking updated (demo mode).');
+        this.error = err.error?.message || 'Could not update the booking.';
       }
     });
   }
@@ -116,28 +125,5 @@ export class BookingsComponent implements OnInit {
   getNights(checkIn: string, checkOut: string): number {
     const diff = new Date(checkOut).getTime() - new Date(checkIn).getTime();
     return Math.max(1, Math.round(diff / (1000 * 60 * 60 * 24)));
-  }
-
-  getMockBookings(): Booking[] {
-    return [
-      {
-        id: 'bk-001', customerId: this.customerId, hotelName: 'PrimeStay Hotel',
-        checkInDate: '2026-05-10T00:00:00', checkOutDate: '2026-05-15T00:00:00',
-        totalAmount: 900, status: 'Confirmed', createdAt: '2026-04-12T10:00:00',
-        roomNumbers: ['201']
-      },
-      {
-        id: 'bk-002', customerId: this.customerId, hotelName: 'PrimeStay Hotel',
-        checkInDate: '2026-06-01T00:00:00', checkOutDate: '2026-06-03T00:00:00',
-        totalAmount: 560, status: 'Confirmed', createdAt: '2026-04-10T10:00:00',
-        roomNumbers: ['101', '102']
-      },
-      {
-        id: 'bk-003', customerId: this.customerId, hotelName: 'PrimeStay Hotel',
-        checkInDate: '2026-03-01T00:00:00', checkOutDate: '2026-03-03T00:00:00',
-        totalAmount: 360, status: 'Cancelled', createdAt: '2026-02-20T08:00:00',
-        roomNumbers: ['301']
-      }
-    ];
   }
 }

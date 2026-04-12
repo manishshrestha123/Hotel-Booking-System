@@ -12,5 +12,6 @@ namespace HotelBookingManagement.Domain.Interface
         string HashPassword(string password);
         bool VerifyPassword(string hash, string password);
         string GenerateJwtToken(User user);
+        string GenerateCustomerJwtToken(Customer customer);
     }
 }

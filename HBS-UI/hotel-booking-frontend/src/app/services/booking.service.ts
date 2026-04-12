@@ -24,6 +24,12 @@ export class BookingService {
     return this.http.get<Booking[]>(`${this.baseUrl}/customer/${customerId}`);
   }
 
+  findBookings(identifier: string): Observable<Booking[]> {
+    return this.http.get<Booking[]>(`${this.baseUrl}/find`, {
+      params: { identifier }
+    });
+  }
+
   cancelBooking(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }

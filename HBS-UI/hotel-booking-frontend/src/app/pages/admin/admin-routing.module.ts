@@ -19,6 +19,10 @@ const routes: Routes = [
       {
         path: 'rooms/create',
         loadChildren: () => import('./create-room/create-room.module').then(m => m.CreateRoomModule)
+      },
+      {
+        path: 'users',
+        loadComponent: () => import('./user-management/user-management.component').then(m => m.UserManagementComponent)
       }
     ]
   }

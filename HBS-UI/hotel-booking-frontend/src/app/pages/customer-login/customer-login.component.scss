@@ -18,8 +18,8 @@ $surface: #13131f;
   border-radius: 12px;
   width: 100%;
   max-width: 440px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 
   .brand {
     text-align: center;
@@ -27,9 +27,9 @@ $surface: #13131f;
     font-weight: 800;
     margin-bottom: 2rem;
     color: #fff;
+
     .icon {
       color: $primary;
-      margin-right: 8px;
     }
   }
 
@@ -58,12 +58,11 @@ $surface: #13131f;
     font-weight: 500;
   }
 
-  input,
-  select {
+  input {
     width: 100%;
     padding: 0.8rem 1rem;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     color: #fff;
     font-family: 'Inter', sans-serif;
@@ -73,16 +72,12 @@ $surface: #13131f;
     &:focus {
       outline: none;
       border-color: $primary;
-      background: rgba(255,255,255,0.06);
+      background: rgba(255, 255, 255, 0.06);
     }
-    
+
     &::placeholder {
       color: #777;
     }
-  }
-
-  select {
-    appearance: none;
   }
 
   .error-msg {
@@ -103,11 +98,10 @@ $surface: #13131f;
   border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
-.btn-submit {
+.btn-submit,
+.btn-guest {
   width: 100%;
   padding: 0.9rem;
-  background: $primary;
-  color: #000;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -115,6 +109,11 @@ $surface: #13131f;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
+}
+
+.btn-submit {
+  background: $primary;
+  color: #000;
 
   &:hover:not([disabled]) {
     transform: translateY(-2px);
@@ -124,6 +123,18 @@ $surface: #13131f;
   &[disabled] {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+}
+
+.btn-guest {
+  margin-top: 1rem;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+
+  &:hover {
+    border-color: $primary;
+    color: $primary;
   }
 }
 

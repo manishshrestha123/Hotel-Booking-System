@@ -2,8 +2,6 @@ using HotelBookingManagement.Domain.Entities;
 using HotelBookingManagement.Domain.Interface;
 using HotelBookingManagement.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
 
 namespace HotelBookingManagement.Infrastructure.Services
 {
@@ -24,6 +22,16 @@ namespace HotelBookingManagement.Infrastructure.Services
         public async Task<Customer?> GetByEmailAsync(string email)
         {
             return await _context.Customers.FirstOrDefaultAsync(c => c.Email == email);
+        }
+
+        public async Task<Customer?> GetByUsernameAsync(string username)
+        {
+            return await _context.Customers.FirstOrDefaultAsync(c => c.Username == username);
+        }
+
+        public async Task<Customer?> GetByIdentifierAsync(string identifier)
+        {
+            return await _context.Customers.FirstOrDefaultAsync(c => c.Email == identifier || c.Username == identifier);
         }
 
         public async Task AddAsync(Customer customer)

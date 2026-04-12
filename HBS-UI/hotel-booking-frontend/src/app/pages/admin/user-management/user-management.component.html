@@ -1,0 +1,91 @@
+<div class="management-page">
+  <div class="hero">
+    <h1>Access <span class="accent">Management</span></h1>
+    <p>Superadmin creates admin and staff accounts. Admin, staff, and superadmin can create customer accounts.</p>
+  </div>
+
+  <div class="management-grid">
+    <section class="card" *ngIf="canCreateSystemUsers; else lockedSystemUsers">
+      <h2>Create Admin / Staff</h2>
+      <p class="card-copy">These accounts use the admin login URL and go to the admin dashboard.</p>
+
+      <form [formGroup]="userForm" (ngSubmit)="createSystemUser()">
+        <div class="field">
+          <label>Full Name</label>
+          <input formControlName="fullName" type="text" />
+        </div>
+        <div class="field">
+          <label>Username</label>
+          <input formControlName="username" type="text" />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input formControlName="email" type="email" />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input formControlName="password" type="password" />
+        </div>
+        <div class="field">
+          <label>Role</label>
+          <select formControlName="role">
+            <option *ngFor="let role of systemRoles" [value]="role.value">{{ role.label }}</option>
+          </select>
+        </div>
+
+        <div class="message success" *ngIf="systemUserMessage">{{ systemUserMessage }}</div>
+        <div class="message error" *ngIf="systemUserError">{{ systemUserError }}</div>
+
+        <button type="submit" class="btn-primary" [disabled]="creatingUser">
+          {{ creatingUser ? 'Creating...' : 'Create System User' }}
+        </button>
+      </form>
+    </section>
+
+    <ng-template #lockedSystemUsers>
+      <section class="card muted">
+        <h2>Create Admin / Staff</h2>
+        <p class="card-copy">Only the superadmin can create internal admin or staff users.</p>
+      </section>
+    </ng-template>
+
+    <section class="card">
+      <h2>Create Customer Account</h2>
+      <p class="card-copy">Customer accounts use the customer login URL. Guests can still continue without logging in.</p>
+
+      <form [formGroup]="customerForm" (ngSubmit)="createCustomerAccount()">
+        <div class="field">
+          <label>Full Name</label>
+          <input formControlName="fullName" type="text" />
+        </div>
+        <div class="field">
+          <label>Username</label>
+          <input formControlName="username" type="text" />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input formControlName="email" type="email" />
+        </div>
+        <div class="field">
+          <label>Phone</label>
+          <input formControlName="phone" type="text" />
+        </div>
+        <div class="field">
+          <label>Date of Birth</label>
+          <input formControlName="dateOfBirth" type="date" />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input formControlName="password" type="password" />
+        </div>
+
+        <div class="message success" *ngIf="customerMessage">{{ customerMessage }}</div>
+        <div class="message error" *ngIf="customerError">{{ customerError }}</div>
+
+        <button type="submit" class="btn-primary" [disabled]="creatingCustomer">
+          {{ creatingCustomer ? 'Creating...' : 'Create Customer Account' }}
+        </button>
+      </form>
+    </section>
+  </div>
+</div>

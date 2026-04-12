@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
-import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-customer-login',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  templateUrl: './customer-login.component.html',
+  styleUrl: './customer-login.component.scss'
 })
-export class LoginComponent {
+export class CustomerLoginComponent {
   loginForm: FormGroup;
   errorMessage: string | null = null;
   isLoading = false;
@@ -37,24 +37,28 @@ export class LoginComponent {
     this.errorMessage = null;
 
     const credentials = this.loginForm.getRawValue();
-    this.authService.loginUser(credentials).subscribe({
+    this.authService.loginCustomer(credentials).subscribe({
       next: (response) => {
         this.isLoading = false;
         const session = this.authService.saveSession(response);
-        const role = session.role.toLowerCase();
 
-        if (role === 'superadmin' || role === 'admin' || role === 'staff') {
-          this.router.navigate(['/admin/dashboard']);
+        if (session.role.toLowerCase() === 'customer') {
+          this.router.navigate(['/bookings']);
           return;
         }
 
         this.authService.logout();
-        this.errorMessage = 'This login is only for superadmin, admin, or staff accounts.';
+        this.errorMessage = 'This login is only for customer accounts.';
       },
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = err.error?.message || 'Invalid username/email or password.';
       }
     });
+  }
+
+  continueAsGuest(): void {
+    this.authService.startGuestSession();
+    this.router.navigate(['/home']);
   }
 }

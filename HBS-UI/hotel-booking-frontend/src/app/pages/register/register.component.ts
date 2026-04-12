@@ -45,7 +45,7 @@ export class RegisterComponent {
       next: () => {
         this.registrationSuccess = true;
         setTimeout(() => {
-          this.router.navigate(['/login']);
+          this.router.navigate(['/admin/login']);
         }, 1000);
 
         this.registerForm.reset();

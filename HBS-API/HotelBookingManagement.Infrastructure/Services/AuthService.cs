@@ -1,14 +1,10 @@
-﻿using HotelBookingManagement.Domain.Entities;
+using HotelBookingManagement.Domain.Entities;
 using HotelBookingManagement.Domain.Interface;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelBookingManagement.Infrastructure.Services
 {
@@ -31,19 +27,41 @@ namespace HotelBookingManagement.Infrastructure.Services
         {
             var claims = new[]
             {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Email, user.Email)
-        };
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
+            };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            return BuildToken(claims);
+        }
+
+        public string GenerateCustomerJwtToken(Customer customer)
+        {
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, customer.Id.ToString()),
+                new Claim(ClaimTypes.Name, customer.Username ?? customer.Email),
+                new Claim(ClaimTypes.Email, customer.Email),
+                new Claim(ClaimTypes.Role, "Customer")
+            };
+
+            return BuildToken(claims);
+        }
+
+        private string BuildToken(IEnumerable<Claim> claims)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var issuer = _config["Jwt:Issuer"];
+            var audience = _config["Jwt:Audience"];
+            var expiryMinutes = int.TryParse(_config["Jwt:ExpiryMinutes"], out var parsedMinutes) ? parsedMinutes : 60;
 
             var token = new JwtSecurityToken(
-                _config["Jwt:Issuer"],
-                _config["Jwt:Issuer"],
+                issuer,
+                audience,
                 claims,
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
                 signingCredentials: creds
             );
 
