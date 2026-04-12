@@ -1,0 +1,146 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <span class="brand-icon">✦</span>
+    <span class="brand-name">PrimeStay</span>
+  </div>
+  <ul class="navbar-links">
+    <li><a routerLink="/home">Home</a></li>
+    <li><a routerLink="/rooms" class="active">Rooms</a></li>
+    <li><a routerLink="/bookings">My Bookings</a></li>
+    <li><a routerLink="/login" class="btn-login">Login</a></li>
+  </ul>
+</nav>
+
+<div class="rooms-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Our <span class="accent">Rooms</span> & Suites</h1>
+      <p>Discover the perfect room for your stay. Filter by price, type, and capacity.</p>
+    </div>
+    <div class="header-actions">
+      <div class="sort-control">
+        <label for="sort-select">Sort by Price</label>
+        <select id="sort-select" [(ngModel)]="sortOrder" (change)="onSortChange()">
+          <option value="">Default</option>
+          <option value="asc">Price: Low → High</option>
+          <option value="desc">Price: High → Low</option>
+        </select>
+      </div>
+      <button class="btn-filter" (click)="showFilterPanel = !showFilterPanel" id="btn-toggle-filter">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/>
+          <line x1="11" y1="18" x2="13" y2="18"/>
+        </svg>
+        Filters
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter Panel -->
+  <div class="filter-panel" [class.open]="showFilterPanel">
+    <div class="filter-grid">
+      <div class="filter-group">
+        <label>Min Price ($/night)</label>
+        <input type="number" id="filter-min-price" [(ngModel)]="filter.minPrice" placeholder="0" min="0" />
+      </div>
+      <div class="filter-group">
+        <label>Max Price ($/night)</label>
+        <input type="number" id="filter-max-price" [(ngModel)]="filter.maxPrice" placeholder="1000" min="0" />
+      </div>
+      <div class="filter-group">
+        <label>Min Guests</label>
+        <input type="number" id="filter-min-guests" [(ngModel)]="filter.minGuests" placeholder="1" min="1" max="10" />
+      </div>
+      <div class="filter-group">
+        <label>Room Type</label>
+        <select id="filter-room-type" [(ngModel)]="selectedRoomType">
+          <option *ngFor="let opt of roomTypeOptions" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="filter-actions">
+      <button class="btn-apply" id="btn-apply-filter" (click)="applyFilter()">Apply Filters</button>
+      <button class="btn-reset" id="btn-reset-filter" (click)="resetFilter()">Reset</button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading rooms...</p>
+  </div>
+
+  <!-- Error Banner -->
+  <div class="error-banner" *ngIf="error && !isLoading">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <span>{{ error }} Showing demo rooms.</span>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && filteredRooms.length === 0">
+    <div class="empty-icon">🏨</div>
+    <h3>No rooms found</h3>
+    <p>Try adjusting your filters to find available rooms.</p>
+    <button class="btn-apply" (click)="resetFilter()">Clear Filters</button>
+  </div>
+
+  <!-- Rooms Grid -->
+  <div class="rooms-grid" *ngIf="!isLoading && filteredRooms.length > 0">
+    <div class="room-card" *ngFor="let room of filteredRooms" [id]="'room-card-' + room.id">
+      <div class="card-image-wrap">
+        <img [src]="getRoomImage(room)" [alt]="room.roomTypeName + ' Room'" class="card-image" loading="lazy" />
+        <div class="card-badge" [class]="getStatusClass(room.status)">{{ room.status }}</div>
+        <div class="card-type-badge">{{ room.roomTypeName }}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-header-row">
+          <h3 class="card-title">Room {{ room.roomNumber }}</h3>
+          <div class="card-price">
+            <span class="price-amount">${{ room.pricePerNight | number:'1.0-0' }}</span>
+            <span class="price-unit">/night</span>
+          </div>
+        </div>
+        <div class="card-meta">
+          <span class="meta-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            {{ room.maxGuests }} Guests
+          </span>
+          <span class="meta-item" *ngIf="room.hotelName">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            {{ room.hotelName }}
+          </span>
+        </div>
+        <div class="card-amenities">
+          <span class="amenity-tag">WiFi</span>
+          <span class="amenity-tag">AC</span>
+          <span class="amenity-tag">TV</span>
+          <span class="amenity-tag" *ngIf="room.roomTypeName === 'Suite' || room.roomTypeName === 'Executive'">Jacuzzi</span>
+          <span class="amenity-tag" *ngIf="room.roomTypeName === 'Deluxe' || room.roomTypeName === 'Executive'">Mini Bar</span>
+        </div>
+        <div class="card-footer">
+          <button class="btn-details" [id]="'btn-details-' + room.id" (click)="viewRoom(room.id)">Details</button>
+          <button class="btn-book-room"
+            [id]="'btn-book-' + room.id"
+            [disabled]="room.status.toLowerCase() !== 'available'"
+            (click)="bookRoom(room)">
+            {{ room.status.toLowerCase() === 'available' ? 'Book Now' : 'Unavailable' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Count -->
+  <div class="results-info" *ngIf="!isLoading && filteredRooms.length > 0">
+    Showing <strong>{{ filteredRooms.length }}</strong> room{{ filteredRooms.length !== 1 ? 's' : '' }}
+  </div>
+</div>

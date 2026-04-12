@@ -1,0 +1,153 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <span class="brand-icon">✦</span>
+    <span class="brand-name">PrimeStay</span>
+  </div>
+  <ul class="navbar-links">
+    <li><a routerLink="/home">Home</a></li>
+    <li><a routerLink="/rooms">Rooms</a></li>
+    <li><a routerLink="/bookings" class="active">My Bookings</a></li>
+    <li><a routerLink="/login" class="btn-login">Login</a></li>
+  </ul>
+</nav>
+
+<div class="bookings-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>My <span class="accent">Bookings</span></h1>
+      <p>Manage all your reservations in one place.</p>
+    </div>
+    <button class="btn-new" id="btn-new-booking" (click)="goCreate()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      New Booking
+    </button>
+  </div>
+
+  <!-- Success Toast -->
+  <div class="toast-success" *ngIf="successMessage">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+    {{ successMessage }}
+  </div>
+
+  <!-- Error Banner -->
+  <div class="error-banner" *ngIf="error && !isLoading">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    {{ error }}
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading your bookings...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && bookings.length === 0">
+    <div class="empty-icon">📋</div>
+    <h3>No bookings yet</h3>
+    <p>You haven't made any reservations. Start by browsing our rooms.</p>
+    <button class="btn-new" routerLink="/rooms">Browse Rooms</button>
+  </div>
+
+  <!-- Bookings List -->
+  <div class="bookings-list" *ngIf="!isLoading && bookings.length > 0">
+    <div class="booking-card" *ngFor="let booking of bookings" [id]="'booking-' + booking.id">
+
+      <!-- Status stripe -->
+      <div class="status-stripe" [class]="getStatusClass(booking.status)"></div>
+
+      <div class="booking-body">
+        <div class="booking-top">
+          <div class="booking-info">
+            <h3 class="booking-hotel">{{ booking.hotelName || 'PrimeStay Hotel' }}</h3>
+            <div class="booking-rooms">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+              Rooms: <strong>{{ booking.roomNumbers.join(', ') || 'N/A' }}</strong>
+            </div>
+          </div>
+          <div class="booking-status-badge" [class]="getStatusClass(booking.status)">
+            {{ booking.status }}
+          </div>
+        </div>
+
+        <div class="booking-dates">
+          <div class="date-block">
+            <span class="date-label">Check-in</span>
+            <span class="date-value">{{ booking.checkInDate | date: 'EEE, MMM d, y' }}</span>
+          </div>
+          <div class="date-arrow">→</div>
+          <div class="date-block">
+            <span class="date-label">Check-out</span>
+            <span class="date-value">{{ booking.checkOutDate | date: 'EEE, MMM d, y' }}</span>
+          </div>
+          <div class="nights-pill">
+            {{ getNights(booking.checkInDate, booking.checkOutDate) }} night{{ getNights(booking.checkInDate, booking.checkOutDate) !== 1 ? 's' : '' }}
+          </div>
+        </div>
+
+        <div class="booking-footer">
+          <div class="booking-amount">
+            <span class="amount-label">Total</span>
+            <span class="amount-value">${{ booking.totalAmount | number: '1.2-2' }}</span>
+          </div>
+          <div class="booking-actions" *ngIf="booking.status.toLowerCase() !== 'cancelled'">
+            <button class="btn-modify" [id]="'btn-modify-' + booking.id" (click)="openModify(booking)">
+              Modify Dates
+            </button>
+            <button class="btn-cancel"
+              [id]="'btn-cancel-' + booking.id"
+              [disabled]="cancellingId === booking.id"
+              (click)="cancelBooking(booking.id)">
+              {{ cancellingId === booking.id ? 'Cancelling...' : 'Cancel' }}
+            </button>
+          </div>
+          <div class="cancelled-note" *ngIf="booking.status.toLowerCase() === 'cancelled'">
+            This booking has been cancelled.
+          </div>
+        </div>
+
+        <div class="booking-id-footer">
+          Booking ID: <code>{{ booking.id }}</code>
+          &nbsp;·&nbsp; Booked on {{ booking.createdAt | date: 'MMM d, y' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modify Modal Overlay -->
+<div class="modal-overlay" *ngIf="modifyingBooking" (click)="cancelModify()">
+  <div class="modal-box" (click)="$event.stopPropagation()" id="modify-modal">
+    <div class="modal-header">
+      <h3>Modify Booking Dates</h3>
+      <button class="modal-close" (click)="cancelModify()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="mod-checkin">New Check-in Date</label>
+        <input type="date" id="mod-checkin" [(ngModel)]="modifyCheckIn" [min]="today" />
+      </div>
+      <div class="form-group">
+        <label for="mod-checkout">New Check-out Date</label>
+        <input type="date" id="mod-checkout" [(ngModel)]="modifyCheckOut" [min]="modifyCheckIn" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="cancelModify()">Cancel</button>
+      <button class="btn-primary" id="btn-confirm-modify" (click)="submitModify()">Save Changes</button>
+    </div>
+  </div>
+</div>
