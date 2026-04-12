@@ -77,7 +77,7 @@ namespace HotelBookingManagement.Application.AppService
             });
         }
 
-        public async Task<RoomDto> CreateRoomAsync(CreateRoomDto dto)
+        public async Task<RoomDto> CreateRoomAsync(CreateRoomDto dto, string? primaryImageUrl = null)
         {
             var room = new HotelBookingManagement.Domain.Entities.Room(
                 dto.HotelId,
@@ -86,6 +86,11 @@ namespace HotelBookingManagement.Application.AppService
                 dto.PricePerNight,
                 dto.Status
             );
+
+            if (!string.IsNullOrEmpty(primaryImageUrl))
+            {
+                room.AddImage(primaryImageUrl, true);
+            }
 
             await _roomRepository.AddAsync(room);
 

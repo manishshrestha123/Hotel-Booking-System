@@ -1,22 +1,25 @@
-<div class="dashboard-container">
-  <h2>Available Hotels</h2>
-  <div class="hotel-list row">
-    <div
-      class="col-md-4"
-      *ngFor="let hotel of hotels"
-    >
-      <div class="card hotel-card">
-        <img
-          [src]="hotel.image"
-          class="card-img-top"
-          alt="{{ hotel.name }}"
-        />
-        <div class="card-body">
-          <h5 class="card-title">{{ hotel.name }}</h5>
-          <p class="card-text text-muted">{{ hotel.location }}</p>
-          <p class="card-text">{{ hotel.description }}</p>
-          <button class="btn btn-success">Book Now</button>
-        </div>
+<div class="admin-dash">
+  <div class="welcome-box">
+    <h1>Welcome back, <span class="accent">Admin</span></h1>
+    <p>Manage your hotel operations, rooms, and guest bookings efficiently.</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon r">🚪</div>
+      <div class="stat-info">
+        <h3>Room Management</h3>
+        <p>Add new rooms or manage existing inventory.</p>
+        <a routerLink="/admin/rooms" class="btn-dash">Manage Rooms →</a>
+      </div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-icon b">📅</div>
+      <div class="stat-info">
+        <h3>Bookings</h3>
+        <p>View guest reservations and availability schedules.</p>
+        <a routerLink="/admin/bookings" class="btn-dash">Manage Bookings →</a>
       </div>
     </div>
   </div>

@@ -42,6 +42,17 @@ namespace HotelBookingManagement.API.Controller
             return Ok(bookings);
         }
 
+        /// <summary>Find booking by email or booking id</summary>
+        [HttpGet("find")]
+        public async Task<IActionResult> Find([FromQuery] string identifier)
+        {
+            if (string.IsNullOrWhiteSpace(identifier)) 
+                return BadRequest(new { message = "Identifier is required." });
+                
+            var bookings = await _bookingService.FindBookingsAsync(identifier);
+            return Ok(bookings);
+        }
+
         /// <summary>Cancel a booking</summary>
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Cancel(Guid id)

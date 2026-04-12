@@ -1,0 +1,59 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <span class="brand-icon">✦</span>
+    <span class="brand-name">PrimeStay</span>
+  </div>
+  <ul class="navbar-links">
+    <li><a routerLink="/home">Home</a></li>
+    <li><a routerLink="/rooms">Rooms</a></li>
+    <li><a routerLink="/find-booking" class="active">Find Booking</a></li>
+    <li><a routerLink="/login" class="btn-login">Login</a></li>
+  </ul>
+</nav>
+
+<div class="find-wrapper">
+  <div class="find-box">
+    <h2>Find Your Booking</h2>
+    <p>Enter your Email Address or Booking ID to retrieve your reservation.</p>
+
+    <div class="search-form">
+      <input type="text" [(ngModel)]="searchQuery" placeholder="Email or Booking ID (e.g. john@example.com)" (keyup.enter)="onSearch()"/>
+      <button class="btn-search" (click)="onSearch()" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Search</span>
+        <span *ngIf="isLoading" class="spinner"></span>
+      </button>
+    </div>
+
+    <div class="alert-error" *ngIf="errorMessage && foundBookings.length === 0">{{ errorMessage }}</div>
+    <div class="alert-info" *ngIf="errorMessage && foundBookings.length > 0">{{ errorMessage }}</div>
+
+    <!-- Results -->
+    <div class="results" *ngIf="foundBookings.length > 0">
+      <h3 class="mb-3">Found Bookings</h3>
+      
+      <div class="booking-card" *ngFor="let b of foundBookings">
+        <div class="card-header">
+          <div class="booking-id">ID: {{ b.id }}</div>
+          <div class="badge" [ngClass]="getBadgeClass(b.status)">{{ b.status }}</div>
+        </div>
+        <div class="hotel-name">{{ b.hotelName }}</div>
+        <div class="dates">
+          <div class="date-col">
+            <span class="label">Check In</span>
+            <span class="val">{{ b.checkInDate | date:'mediumDate' }}</span>
+          </div>
+          <div class="date-divider">→</div>
+          <div class="date-col">
+            <span class="label">Check Out</span>
+            <span class="val">{{ b.checkOutDate | date:'mediumDate' }}</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="total-label">Total Amount</div>
+          <div class="total-val">${{ b.totalAmount | number:'1.2-2' }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

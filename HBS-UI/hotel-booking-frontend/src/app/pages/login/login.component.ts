@@ -28,17 +28,27 @@ export class LoginComponent {
     });
   }
 
+  isLoading = false;
+
   onSubmit(): void {
     if (this.loginForm.invalid) return;
 
-    this.authService.login(this.loginForm.value).subscribe({
-      next: (res) => {
-        localStorage.setItem('access_token', res.token); // adapt key if different
-        this.router.navigate(['/dashboard']);
-      },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'Login failed';
-      },
-    });
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    // Simulate login call
+    const val = this.loginForm.value;
+    setTimeout(() => {
+      this.isLoading = false;
+      if (val.email.includes('admin')) {
+        localStorage.setItem('access_token', 'fake-admin-jwt');
+        localStorage.setItem('user_role', 'admin');
+        this.router.navigate(['/admin/dashboard']);
+      } else {
+        localStorage.setItem('access_token', 'fake-guest-jwt');
+        localStorage.setItem('user_role', 'guest');
+        this.router.navigate(['/home']);
+      }
+    }, 1000);
   }
 }

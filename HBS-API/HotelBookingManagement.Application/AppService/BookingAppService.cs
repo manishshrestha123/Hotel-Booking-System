@@ -113,6 +113,21 @@ namespace HotelBookingManagement.Application.AppService
             });
         }
 
+        public async Task<IEnumerable<BookingDto>> FindBookingsAsync(string identifier)
+        {
+            if (Guid.TryParse(identifier, out Guid bookingId))
+            {
+                var booking = await GetBookingByIdAsync(bookingId);
+                return booking != null ? new[] { booking } : Enumerable.Empty<BookingDto>();
+            }
+            
+            // Treat identifier as Email
+            var customer = await _customerRepository.GetByEmailAsync(identifier);
+            if (customer == null) return Enumerable.Empty<BookingDto>();
+
+            return await GetBookingsByCustomerAsync(customer.Id);
+        }
+
         public async Task CancelBookingAsync(Guid id)
         {
             var booking = await _bookingRepository.GetByIdAsync(id)

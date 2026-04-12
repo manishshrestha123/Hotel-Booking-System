@@ -60,5 +60,33 @@ namespace HotelBookingManagement.API.Controller
             var room = await _roomService.CreateRoomAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = room.Id }, room);
         }
+
+        /// <summary>Create a new room with primary image (admin only)</summary>
+        [HttpPost("with-image")]
+        public async Task<IActionResult> CreateWithImage([FromForm] CreateRoomDto dto, Microsoft.AspNetCore.Http.IFormFile image)
+        {
+            string imageUrl = null;
+            if (image != null && image.Length > 0)
+            {
+                var directoryInfo = new System.IO.DirectoryInfo(System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "images", "rooms"));
+                if (!directoryInfo.Exists)
+                {
+                    directoryInfo.Create();
+                }
+
+                var fileName = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(image.FileName);
+                var filePath = System.IO.Path.Combine(directoryInfo.FullName, fileName);
+
+                using (var stream = new System.IO.FileStream(filePath, System.IO.FileMode.Create))
+                {
+                    await image.CopyToAsync(stream);
+                }
+
+                imageUrl = $"/images/rooms/{fileName}"; // Static URL mapped by the host
+            }
+
+            var room = await _roomService.CreateRoomAsync(dto, imageUrl);
+            return CreatedAtAction(nameof(GetById), new { id = room.Id }, room);
+        }
     }
 }

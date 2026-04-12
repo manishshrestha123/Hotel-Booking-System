@@ -22,6 +22,16 @@ export const routes: Routes = [
       import('./pages/bookings/bookings.module').then((m) => m.BookingsModule),
   },
   {
+    path: 'find-booking',
+    loadChildren: () =>
+      import('./pages/find-booking/find-booking.module').then((m) => m.FindBookingModule),
+  },
+  {
+    path: 'admin',
+    loadChildren: () =>
+      import('./pages/admin/admin.module').then((m) => m.AdminModule),
+  },
+  {
     path: 'dashboard',
     loadChildren: () =>
       import('./pages/dashboard/dashboard.module').then((m) => m.DashboardModule),

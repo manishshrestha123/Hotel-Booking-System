@@ -1,12 +1,15 @@
 <div class="login-wrapper">
   <div class="login-box">
+    <div class="brand">
+      <span class="icon">✦</span> PrimeStay
+    </div>
     <h2>Welcome Back</h2>
     <p>Please login to your account</p>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label>Email</label>
-        <input formControlName="email" type="email" placeholder="Enter your email" />
+        <label>Email Address</label>
+        <input formControlName="email" type="email" placeholder="admin@primestay.com or guest" />
         <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-msg">
           Valid email is required.
         </div>
@@ -14,7 +17,7 @@
 
       <div class="form-group">
         <label>Password</label>
-        <input formControlName="password" type="password" placeholder="Enter your password" />
+        <input formControlName="password" type="password" placeholder="••••••••" />
         <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-msg">
           Password is required.
         </div>
@@ -24,10 +27,15 @@
         {{ errorMessage }}
       </div>
 
-      <button type="submit" [disabled]="loginForm.invalid">Login</button>
+      <button type="submit" class="btn-submit" [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="!isLoading">Login</span>
+        <span *ngIf="isLoading">Authenticating...</span>
+      </button>
     </form>
-     <div class="signup-link">
+    
+    <div class="signup-link">
       <p>Don't have an account? <a routerLink="/register">Sign up</a></p>
+      <p style="margin-top: 10px;"><a routerLink="/home" style="color: #a0a0ab;">← Back to Home</a></p>
     </div>
   </div>
 </div>

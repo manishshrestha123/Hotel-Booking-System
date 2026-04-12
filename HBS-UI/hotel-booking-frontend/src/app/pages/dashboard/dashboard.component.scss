@@ -1,60 +1,84 @@
-.dashboard-container {
+$primary: #c9a96e;
+$surface: #13131f;
+
+.admin-dash {
+  font-family: 'Inter', sans-serif;
+}
+
+.welcome-box {
+  background: $surface;
+  padding: 3rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 2rem;
+
+  h1 {
+    color: #fff;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    
+    .accent { color: $primary; }
+  }
+
+  p {
+    color: #a0a0ab;
+    font-size: 1.1rem;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background: $surface;
+  border-radius: 12px;
   padding: 2rem;
-  background: #f8f9fa;
-}
+  border: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  transition: transform 0.2s;
 
-.dashboard-container h2 {
-  margin-bottom: 2rem;
-  text-align: center;
-  font-weight: 600;
-  color: #343a40;
-}
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(201, 169, 110, 0.3);
+  }
 
-.hotel-card {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
-  transition: transform 0.2s ease-in-out;
-}
+  .stat-icon {
+    font-size: 2.5rem;
+    padding: 1rem;
+    border-radius: 12px;
+    
+    &.r { background: rgba(16, 185, 129, 0.1); }
+    &.b { background: rgba(59, 130, 246, 0.1); }
+  }
 
-.hotel-card:hover {
-  transform: translateY(-5px);
-}
-
-.card-img-top {
-  height: 200px;
-  object-fit: cover;
-}
-
-.card-body {
-  text-align: center;
-}
-.dashboard-container {
-  padding: 2rem;
-  background: #f8f9fa;
-}
-
-.dashboard-container h2 {
-  margin-bottom: 2rem;
-  text-align: center;
-  font-weight: 600;
-  color: #343a40;
-}
-
-.hotel-card {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
-  transition: transform 0.2s ease-in-out;
-}
-
-.hotel-card:hover {
-  transform: translateY(-5px);
-}
-
-.card-img-top {
-  height: 200px;
-  object-fit: cover;
-}
-
-.card-body {
-  text-align: center;
+  .stat-info {
+    h3 {
+      color: #fff;
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    p {
+      color: #a0a0ab;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    
+    .btn-dash {
+      color: $primary;
+      text-decoration: none;
+      font-weight: 600;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }

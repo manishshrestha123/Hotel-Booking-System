@@ -21,7 +21,12 @@ namespace HotelBookingManagement.Application.AppService
             if (existing != null)
                 throw new Exception("A customer with this email already exists.");
 
-            var customer = new Customer(dto.FullName, dto.Email, dto.Phone);
+            Customer customer;
+            if (dto.DateOfBirth.HasValue)
+                customer = new Customer(dto.FullName, dto.Email, dto.Phone, dto.DateOfBirth.Value);
+            else
+                customer = new Customer(dto.FullName, dto.Email, dto.Phone);
+                
             await _customerRepository.AddAsync(customer);
 
             return new CustomerDto
@@ -29,7 +34,8 @@ namespace HotelBookingManagement.Application.AppService
                 Id = customer.Id,
                 FullName = customer.FullName,
                 Email = customer.Email,
-                Phone = customer.Phone
+                Phone = customer.Phone,
+                DateOfBirth = customer.DateOfBirth
             };
         }
 
@@ -43,7 +49,8 @@ namespace HotelBookingManagement.Application.AppService
                 Id = c.Id,
                 FullName = c.FullName,
                 Email = c.Email,
-                Phone = c.Phone
+                Phone = c.Phone,
+                DateOfBirth = c.DateOfBirth
             };
         }
     }

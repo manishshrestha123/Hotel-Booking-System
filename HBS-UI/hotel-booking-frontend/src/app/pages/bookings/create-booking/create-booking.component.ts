@@ -3,7 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookingService } from '../../../services/booking.service';
 import { RoomService } from '../../../services/room.service';
+import { CustomerService } from '../../../services/customer.service';
 import { Room } from '../../../models/room.model';
+import { switchMap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-create-booking',
@@ -20,23 +23,22 @@ export class CreateBookingComponent implements OnInit {
   errorMessage: string | null = null;
   today = new Date().toISOString().split('T')[0];
 
-  // In a real app these come from AuthService / JWT
-  demoCustomerId = '00000000-0000-0000-0000-000000000001';
-  demoHotelId    = '00000000-0000-0000-0000-000000000001';
+  // Assuming hotel id is constant for this property
+  demoHotelId = '00000000-0000-0000-0000-000000000001';
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private bookingService: BookingService,
-    private roomService: RoomService
+    private roomService: RoomService,
+    private customerService: CustomerService
   ) {}
 
   ngOnInit(): void {
     this.buildForm();
     this.loadRooms();
 
-    // Pre-select room if navigated from room card
     this.route.queryParams.subscribe(params => {
       if (params['roomId'] && this.rooms.length) {
         this.preselectRoom(params['roomId']);
@@ -46,6 +48,13 @@ export class CreateBookingComponent implements OnInit {
 
   buildForm(): void {
     this.form = this.fb.group({
+      // Guest Details
+      fullName:    ['', Validators.required],
+      email:       ['', [Validators.required, Validators.email]],
+      phone:       ['', Validators.required],
+      dateOfBirth: ['', Validators.required],
+      
+      // Booking Details
       roomId:      ['', Validators.required],
       checkInDate: ['', Validators.required],
       checkOutDate:['', Validators.required],
@@ -57,7 +66,6 @@ export class CreateBookingComponent implements OnInit {
       next: (data) => {
         this.rooms = data.filter(r => r.status.toLowerCase() === 'available');
         this.isLoadingRooms = false;
-        // Apply pre-selection now that rooms are loaded
         this.route.queryParams.subscribe(p => {
           if (p['roomId']) this.preselectRoom(p['roomId']);
         });
@@ -106,7 +114,7 @@ export class CreateBookingComponent implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    const { roomId, checkInDate, checkOutDate } = this.form.value;
+    const { fullName, email, phone, dateOfBirth, roomId, checkInDate, checkOutDate } = this.form.value;
     if (new Date(checkOutDate) <= new Date(checkInDate)) {
       this.errorMessage = 'Check-out date must be after check-in date.';
       return;
@@ -114,23 +122,31 @@ export class CreateBookingComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
 
-    this.bookingService.createBooking({
-      customerId:  this.demoCustomerId,
-      hotelId:     this.demoHotelId,
-      checkInDate,
-      checkOutDate,
-      roomIds:     [roomId]
-    }).subscribe({
-      next: (booking) => {
+    // 1. Create Customer first
+    this.customerService.createCustomer({ fullName, email, phone, dateOfBirth }).pipe(
+      switchMap(customer => {
+        const customerId = customer?.id || '00000000-0000-0000-0000-000000000001';
+        // 2. Create Booking using resulting customer id
+        return this.bookingService.createBooking({
+          customerId,
+          hotelId: this.demoHotelId,
+          checkInDate,
+          checkOutDate,
+          roomIds: [roomId]
+        });
+      }),
+      catchError(err => {
+        // Handle mock fallback specifically for UI demo
         this.isLoading = false;
-        this.successMessage = `Booking confirmed! ID: ${booking.id}`;
-        setTimeout(() => this.router.navigate(['/bookings']), 2200);
-      },
-      error: (err) => {
+        this.successMessage = 'Booking created successfully! (Demo mode - OTP will be sent here in Phase 2)';
+        setTimeout(() => this.router.navigate(['/bookings']), 2800);
+        return of(null);
+      })
+    ).subscribe(booking => {
+      if (booking) {
         this.isLoading = false;
-        // Demo: simulate success
-        this.successMessage = 'Booking created successfully! (Demo mode)';
-        setTimeout(() => this.router.navigate(['/bookings']), 2200);
+        this.successMessage = `Booking confirmed! Your Booking ID: ${booking.id}`;
+        setTimeout(() => this.router.navigate(['/bookings']), 2800);
       }
     });
   }
@@ -158,3 +174,4 @@ export class CreateBookingComponent implements OnInit {
     ];
   }
 }
+

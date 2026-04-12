@@ -40,5 +40,10 @@ namespace HotelBookingManagement.Domain.Entities
         {
             Status = status;
         }
+
+        public void AddImage(string imageUrl, bool isPrimary)
+        {
+            Images.Add(new RoomImage(this.Id, imageUrl, isPrimary));
+        }
     }
 }
